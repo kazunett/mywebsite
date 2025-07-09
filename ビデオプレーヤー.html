@@ -1,0 +1,136 @@
+<!DOCTYPE html
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>複数ビデオ対応・チャプター＆キーワード付きプレイヤー</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div style="margin-bottom:10px;">
+  <a href="目次.html" style="text-decoration:none;font-weight:bold;">← 目次へ戻る</a>
+</div>
+<div class="container">
+    <div class="video-area">
+      <label for="videoSelect"><strong>ビデオを選択:</strong></label>
+      <select id="videoSelect" onchange="loadVideoAndChapters()"></select>
+
+      <video id="videoPlayer" width="640" height="360" controls style="margin-top: 20px;">
+        <source src=""  type="video/mp4">
+        お使いのブラウザは video タグに対応していません。
+      </video>
+    </div>
+
+    <div class="chapters">
+      <h2>目次</h2>
+      <ul id="chapterList"></ul>
+    </div>
+  </div>
+
+  <script>
+    const chapterData = {
+  "慢性心不全診療の基本のき①": [
+  { label: "はじめに", time: 0, keywords: ["自己紹介"] },
+  { label: "心不全パンデミック", time: 200, keywords: ["パンデミック", "人口統計"] },
+  { label: "心不全の定義", time: 415, keywords: ["慢性心不全"] },
+  { label: "病みの軌跡、進展ステージ", time: 720, keywords: ["ステージ", "うっ血", "低心拍出"] },
+  { label: "心不全の疾病管理と療養指導", time: 1020, keywords: ["予防", "再入院", "服薬指導", "社会的援助", "体重"] },
+  { label: "当院でのこれからの心不全診療", time: 1380, keywords: ["心不全療養指導士"] },
+  { label: "Take home message", time: 1545, keywords: ["まとめ"] }
+],
+"慢性心不全診療の基本のき②": [
+  { label: "復習（10分すぎからスタート）", time: 635, keywords: ["パンデミック","心不全の定義","病みの軌跡","疾病管理"]},
+  { label: "心不全の病態補足", time: 820, keywords: ["うっ血", "低心拍出"] },
+  { label: "左室駆出率", time: 1005, keywords: ["LVEF"] },
+  { label: "病みの軌跡(症例提示１)", time: 1240, keywords: ["HFrEF", "拡張型心筋症"] },
+  { label: "心不全の分類", time: 1630, keywords: ["HFrEF", "HFpEF", "服薬指導"] },
+  { label: "病みの軌跡（症例提示２）", time: 1745, keywords: ["HFpEF","高齢高血圧"] },
+  { label: "Take home message", time: 2020, keywords: ["まとめ"] }
+  
+],
+
+ "慢性心不全診療の基本のき③": [
+  { label: "①②の復習", time: 60, keywords: ["復習"] },
+  { label: "病みの軌跡（症例３）", time: 660, keywords: ["繰り返す入院", "糖尿病","虚血性心疾患"] },
+  { label: "心不全疾病管理", time: 1050, keywords: ["生活習慣","患者・家族教育"] },
+  { label: "ACP", time: 1360, keywords: ["ACP", "心不全末期"] },
+  { label: "Take home message", time: 1500, keywords: ["まとめ"] }
+    ]
+
+    };
+
+    function loadVideoAndChapters() {
+      const file = document.getElementById("videoSelect").value;
+      const video = document.getElementById("videoPlayer");
+      video.querySelector("source").src = "videos/"+ file +".mp4";
+      video.load();
+      renderChapters(file);
+    }
+
+    function renderChapters(file) {
+      const list = document.getElementById("chapterList");
+      list.innerHTML = '';
+      if (!chapterData[file]) return;//安全にスキップ
+      chapterData[file].forEach(chap => {
+        const li = document.createElement("li");
+
+        const title = document.createElement("div");
+        title.className = "chapter-title";
+        title.textContent = `▶ ${formatTime(chap.time)} - ${chap.label}`;
+        title.onclick = () => seekVideo(chap.time);
+
+        li.appendChild(title);
+
+        if (chap.keywords && chap.keywords.length > 0) {
+          const keywords = document.createElement("div");
+          keywords.className = "chapter-keywords";
+          keywords.textContent = "キーワード: " + chap.keywords.join(", ");
+          li.appendChild(keywords);
+        }
+
+        list.appendChild(li);
+      });
+    }
+
+    function seekVideo(seconds) {
+      const video = document.getElementById("videoPlayer");
+      video.currentTime = seconds;
+      video.play();
+    }
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
+    // URLパラメータ対応
+    window.onload = () => {
+      // セレクトボックスを chapterData から自動生成
+const videoSelect = document.getElementById("videoSelect");
+for (const key in chapterData) {
+  const option = document.createElement("option");
+  option.value = key;
+  option.textContent = key;
+  videoSelect.appendChild(option);
+}
+
+      const params = new URLSearchParams(window.location.search);
+      const file = params.get("file");
+      const time = parseFloat(params.get("time"));
+
+      if (file && chapterData[file]) {
+        document.getElementById("videoSelect").value = file;
+        loadVideoAndChapters();
+        setTimeout(() => {
+          if (!isNaN(time)) {
+            seekVideo(time);
+          }
+        }, 500);
+      } else {
+        loadVideoAndChapters();
+      }
+    };
+  </script>
+</body>
+</html>
