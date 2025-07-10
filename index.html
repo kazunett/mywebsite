@@ -102,3 +102,108 @@ window.onload = () => {
 
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>心不全研修会ビデオ目次</title>
+  <style>
+    body { font-family: sans-serif; background: #f9f9f9; padding: 20px; }
+    .video-block { margin-bottom: 20px; padding: 10px; background: #fff; border-radius: 8px; }
+    .chapter { margin-left: 20px; cursor: pointer; }
+    .chapter:hover { text-decoration: underline; }
+    .highlight { background: yellow; font-weight: bold; }
+    input { padding: 8px; font-size: 1rem; width: 300px; }
+  </style>
+</head>
+<body>
+
+<h1>心不全研修会ビデオ目次</h1>
+<input type="text" id="searchInput" placeholder="キーワード検索..." oninput="renderCatalog()">
+
+<div id="catalog"></div>
+
+<script>
+const chapterData = {
+"慢性心不全診療の基本のき①": [
+  { label: "はじめに", time: 0, keywords: ["自己紹介"] },
+  { label: "心不全パンデミック", time: 208, keywords: ["パンデミック", "人口統計"] },
+  { label: "心不全の定義", time: 415, keywords: ["慢性心不全"] },
+  { label: "病みの軌跡、進展ステージ", time: 720, keywords: ["ステージ", "うっ血", "低心拍出"] },
+  { label: "心不全の疾病管理と療養指導", time: 1020, keywords: ["予防", "再入院", "服薬指導", "社会的援助", "体重"] },
+  { label: "当院でのこれからの心不全診療", time: 1380, keywords: ["心不全療養指導士"] },
+  { label: "Take home message", time: 1545, keywords: ["まとめ"] }
+
+],
+"慢性心不全診療の基本のき②": [
+  { label: "復習（10分すぎからスタート）", time: 635, keywords: ["パンデミック","心不全の定義","病みの軌跡","疾病管理"]},
+  { label: "心不全の病態補足", time: 820, keywords: ["うっ血", "低心拍出"] },
+  { label: "左室駆出率", time: 1005, keywords: ["LVEF"] },
+  { label: "病みの軌跡(症例１)", time: 1240, keywords: ["HFrEF", "拡張型心筋症"] },
+  { label: "心不全の分類", time: 1630, keywords: ["HFrEF", "HFpEF", "服薬指導"] },
+  { label: "病みの軌跡（症例２）", time: 1745, keywords: ["HFpEF","高齢高血圧"] },
+   { label: "Take home message", time: 2020, keywords: ["まとめ"] }
+
+],
+"慢性心不全診療の基本のき③": [
+  { label: "①②の復習", time: 60, keywords: ["復習"] },
+  { label: "病みの軌跡（症例３）", time: 660, keywords: ["繰り返す入院", "糖尿病","虚血性心疾患"] },
+  { label: "心不全疾病管理", time: 1050, keywords: ["生活習慣","患者・家族教育"] },
+  { label: "ACP", time: 1360, keywords: ["ACP", "心不全末期"] },
+  { label: "Take home message", time: 1500, keywords: ["まとめ"] }
+
+]
+};
+
+function renderCatalog() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  const container = document.getElementById("catalog");
+  container.innerHTML = '';
+
+  for (const file in chapterData) {
+    const videoBlock = document.createElement("div");
+    videoBlock.className = "video-block";
+    let hasMatch = false;
+
+    const title = document.createElement("h3");
+    title.textContent = file ;
+    videoBlock.appendChild(title);
+
+    chapterData[file].forEach(chap => {
+      const combinedText = [chap.label, ...(chap.keywords || [])].join(" ").toLowerCase();
+      if (!query || combinedText.includes(query)) {
+        hasMatch = true;
+        const div = document.createElement("div");
+        div.className = "chapter";
+        div.innerHTML = highlightMatch(`▶ ${chap.label} (${chap.keywords.join(", ")})`, query);
+        div.onclick = () => {
+          window.location.href = `ビデオプレーヤー.html?file=${encodeURIComponent(file)}&time=${chap.time}`;
+        };
+        videoBlock.appendChild(div);
+      }
+    });
+
+    if (hasMatch) {
+      container.appendChild(videoBlock);
+    }
+  }
+}
+
+function highlightMatch(text, query) {
+  if (!query) return text;
+  const re = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+  return text.replace(re, '<span class="highlight">$1</span>');
+}
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+window.onload = () => {
+  renderCatalog();
+};
+</script>
+
+</body>
+</html>

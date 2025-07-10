@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 body {
   font-family: sans-serif;
   background: #f0f2f5;
@@ -87,3 +88,94 @@ body {
   color: #555;
   margin-left: 10px;
 }
+=======
+body {
+  font-family: sans-serif;
+  background: #f0f2f5;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  max-width: 1000px;
+  margin: 40px auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.video-area {
+  flex: 2;
+  padding: 20px;
+}
+
+.search-box {
+  margin-top: 20px;
+}
+
+.search-box input {
+  padding: 8px;
+  width: 90%;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+#searchResults {
+  list-style: none;
+  padding: 0;
+}
+
+.search-result {
+  background: #fff3cd;
+  padding: 8px;
+  margin-bottom: 6px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search-result:hover {
+  background: #ffe8a1;
+}
+
+.chapters {
+  flex: 1;
+  padding: 20px;
+  background: #f8fbff;
+  border-left: 1px solid #ddd;
+}
+
+.chapters h2 {
+  margin-top: 0;
+}
+
+.chapters ul {
+  list-style: none;
+  padding: 0;
+}
+
+.chapters li {
+  padding: 10px;
+  background: #e3f2fd;
+  border-radius: 5px;
+  margin-bottom: 8px;
+}
+
+.chapter-title {
+  cursor: pointer;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.chapter-title:hover {
+  color: #1565c0;
+}
+
+.chapter-keywords {
+  font-size: 0.85em;
+  color: #555;
+  margin-left: 10px;
+}
+>>>>>>> e8c9d771177016c9aa712c0f9779ff8826515cdd
